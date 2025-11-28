@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-    REGISTRY = "gautamdevgrover"          // your Docker Hub username
+    REGISTRY = "gautamdevgrover"
     IMAGE = "demo-cicd"
   }
 
@@ -37,25 +37,25 @@ pipeline {
 
     stage('Deploy on EC2') {
       steps {
-        // Use SSH Username with private key credential in Jenkins (id: jenkins-agent-key)
         sshagent (credentials: ['jenkins-agent-key']) {
           sh '''
-            echo "Deploying container on EC2..."
+            echo "Deploying container on EC2 from node: ${NODE_NAME}"
+            IMAGE="${REGISTRY}/${IMAGE}:${BUILD_NUMBER}"
+            echo "Will deploy image: $IMAGE"
 
-            ssh -o StrictHostKeyChecking=no ubuntu@13.203.222.127 << 'EOF'
-              set -e
-              IMAGE="${REGISTRY}/${IMAGE}:${BUILD_NUMBER}"
+            which ssh || { echo "ssh not found on this node"; exit 2; }
+            ssh-add -l || true
 
-              echo "Pulling image: $IMAGE"
+            ssh -o BatchMode=yes -o ConnectTimeout=8 -o StrictHostKeyChecking=no ubuntu@13.203.222.127 'echo REMOTE_OK || true'
+
+            ssh -o StrictHostKeyChecking=no ubuntu@13.203.222.127 <<EOF
+              set -ex
+              echo "Remote: pulling $IMAGE"
               docker pull "$IMAGE"
-
-              echo "Stopping existing container (if any)..."
               docker stop todo-app || true
               docker rm todo-app || true
-
-              echo "Running new container..."
               docker run -d -p 80:80 --name todo-app "$IMAGE"
-            EOF
+EOF
           '''
         }
       }
