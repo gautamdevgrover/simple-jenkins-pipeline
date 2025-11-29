@@ -37,7 +37,7 @@ pipeline {
 
     stage('Deploy on EC2') {
       steps {
-        sshagent (credentials: ['ubuntu]) {
+        sshagent (credentials: ['ubuntu']) {
           sh '''
             echo "Deploying container on EC2 from node: ${NODE_NAME}"
             IMAGE="${REGISTRY}/${IMAGE}:${BUILD_NUMBER}"
