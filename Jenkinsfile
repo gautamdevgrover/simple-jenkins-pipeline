@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     REGISTRY = "gautamdevgrover"
-    IMAGE = "demo-cicd"
+    IMAGE = "simple-webserver"
   }
 
   stages {
@@ -52,9 +52,10 @@ pipeline {
               set -ex
               echo "Remote: pulling $IMAGE"
               docker pull "$IMAGE"
-              docker stop todo-app || true
+              docker stop simple-webserver-container || true
               docker rm todo-app || true
-              docker run -d -p 80:80 --name todo-app "$IMAGE"
+              docker rm simple-webserver-container || true
+              docker run -d -p 80:80 --name simple-webserver-container "$IMAGE"
 EOF
           '''
         }
