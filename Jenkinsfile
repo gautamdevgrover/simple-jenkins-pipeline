@@ -1,5 +1,5 @@
 pipeline {
-  agent any
+  agent none
 
   environment {
     REGISTRY = "gautamdevgrover"
@@ -7,53 +7,49 @@ pipeline {
   }
 
   stages {
-    stage('Checkout') {
-      steps { checkout scm }
+    stage('Checkout (master-node)') {
+      agent { label 'master-node' }    // optional — keeps a record, not needed for build
+      steps {
+        checkout scm
+        echo "Checked out on master (optional)."
+      }
     }
 
-    stage('Build Docker Image') {
+    stage('Build Docker Image (on worker)') {
+      agent { label 'worker-node' }    // <-- the worker node label (must match your node label)
       steps {
+        // Checkout on the worker so Dockerfile and app files are present here
+        checkout scm
+
         sh '''
-          echo "Building Docker image..."
+          echo "Building Docker image on worker..."
           docker build -t ${REGISTRY}/${IMAGE}:${BUILD_NUMBER} .
         '''
       }
     }
 
     stage('Docker Login & Push') {
+      agent { label 'worker-node' }    // can run on worker too (it has docker)
       steps {
         withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
           sh '''
-            echo "Logging in to Docker Hub..."
             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-
-            IMAGE_TO_PUSH="${REGISTRY}/${IMAGE}:${BUILD_NUMBER}"
-            echo "Pushing ${IMAGE_TO_PUSH} ..."
-            docker push "$IMAGE_TO_PUSH"
+            docker push ${REGISTRY}/${IMAGE}:${BUILD_NUMBER}
           '''
         }
       }
     }
 
     stage('Deploy on EC2') {
+      agent { label 'worker-node' }    // run deploy from master (or any node with ssh & key)
       steps {
         sshagent (credentials: ['jenkins-agent-key']) {
           sh '''
-            echo "Deploying container on EC2 from node: ${NODE_NAME}"
             IMAGE="${REGISTRY}/${IMAGE}:${BUILD_NUMBER}"
-            echo "Will deploy image: $IMAGE"
-
-            which ssh || { echo "ssh not found on this node"; exit 2; }
-            ssh-add -l || true
-
-            ssh -o BatchMode=yes -o ConnectTimeout=8 -o StrictHostKeyChecking=no ubuntu@13.203.222.127 'echo REMOTE_OK || true'
-
             ssh -o StrictHostKeyChecking=no ubuntu@13.203.222.127 <<EOF
               set -ex
-              echo "Remote: pulling $IMAGE"
               docker pull "$IMAGE"
               docker stop simple-webserver-container || true
-              docker rm todo-app || true
               docker rm simple-webserver-container || true
               docker run -d -p 80:80 --name simple-webserver-container "$IMAGE"
 EOF
