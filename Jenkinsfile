@@ -95,3 +95,4 @@ EOF
       echo "Pipeline finished (success or failure)."
     }
   }
+}
