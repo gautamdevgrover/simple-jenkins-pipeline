@@ -7,20 +7,24 @@ pipeline {
   }
 
   stages {
-    stage('Checkout (master-node)') {
+    stage('Checking out repo on master-node)') {
       agent { label 'master-node' }    // optional — keeps a record, not needed for build
       steps {
         checkout scm
-        echo "Checked out on master (optional)."
+        echo "Checked out on master-node."
       }
     }
-
-    stage('Build Docker Image (on worker)') {
+    stage('Checking out repo on worker-node') {
+      agent { label 'worker-node' }
+      steps {
+        checkout scm
+        echo "Checked out on worker-node."
+      }
+    }   
+    stage('Build Docker Image on worker-node') {
       agent { label 'worker-node' }    // <-- the worker node label (must match your node label)
       steps {
-        // Checkout on the worker so Dockerfile and app files are present here
-        checkout scm
-
+        
         sh '''
           echo "Building Docker image on worker..."
           docker build -t ${REGISTRY}/${IMAGE}:${BUILD_NUMBER} .
