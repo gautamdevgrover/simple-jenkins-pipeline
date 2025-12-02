@@ -14,6 +14,16 @@ pipeline {
         echo "Checked out on master-node."
       }
     }
+
+    stage('install git if its not installed') {
+      agent { label 'worker-node' }    
+      steps {
+        sh '''
+          sudo apt install git -y
+        '''
+      }
+    }
+
     stage('Checking out repo on worker-node') {
       agent { label 'worker-node' }
       steps {
