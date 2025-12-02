@@ -67,8 +67,8 @@ EOF
   post {
     success {
       emailext (
-        subject: "SUCCESS: ${JOB_NAME} #${BUILD_NUMBER}",
-        body: '''<p>Good news — build succeeded.</p>
+        subject: "Pipeline finsihed Successfully! JobName: ${JOB_NAME} #${BUILD_NUMBER}",
+        body: '''<p>Hi gautam Its Good news your Pipeline is — build successfully.</p>
                 <b>Job:</b> ${JOB_NAME}<br/>
                 <b>Build:</b> <a href="${BUILD_URL}">#${BUILD_NUMBER}</a><br/>
                 <b>Node:</b> ${NODE_NAME}<br/>
