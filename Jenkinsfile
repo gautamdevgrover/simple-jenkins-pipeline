@@ -65,7 +65,33 @@ EOF
   }
 
   post {
-    success { echo "Pipeline completed successfully." }
-    failure { echo "Pipeline failed." }
+  success {
+    emailext (
+      subject: "SUCCESS: ${JOB_NAME} #${BUILD_NUMBER}",
+      body: """<p>Good news — build succeeded.</p>
+               <b>Job:</b> ${JOB_NAME}<br/>
+               <b>Build:</b> <a href="${BUILD_URL}">#${BUILD_NUMBER}</a><br/>
+               <b>Node:</b> ${NODE_NAME}<br/>
+               <pre>${CHANGES_SINCE_LAST_SUCCESS, format="JSON"}</pre>""",
+      to: "you@example.com",
+      mimeType: 'text/html'
+    )
+  }
+  failure {
+    emailext (
+      subject: "FAILURE: ${JOB_NAME} #${BUILD_NUMBER}",
+      body: """<p>Build failed — please check.</p>
+               <b>Job:</b> ${JOB_NAME}<br/>
+               <b>Build:</b> <a href="${BUILD_URL}">#${BUILD_NUMBER}</a><br/>
+               <b>Node:</b> ${NODE_NAME}<br/>
+               <p>Console output is attached.</p>""",
+      to: "you@example.com",
+      mimeType: 'text/html',
+      attachLog: true,        // attach console log to help debugging
+      compressLog: true       // compress attachment (optional)
+    )
+  }
+  always {
+    echo "Pipeline finished (success or failure)."
   }
 }
