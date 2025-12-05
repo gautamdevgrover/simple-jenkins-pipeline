@@ -69,10 +69,11 @@ EOF
       emailext (
         subject: "Pipeline finsihed Successfully! JobName: ${JOB_NAME} #${BUILD_NUMBER}",
         body: '''<p>Hi gautam Its Good news your Pipeline is — build successfully.</p>
-                <b>Job:</b> ${JOB_NAME}<br/>
-                <b>Build:</b> <a href="${BUILD_URL}">#${BUILD_NUMBER}</a><br/>
+                <b>Job:</b> ${env.JOB_NAME}<br/>
+                <b>Build:</b> #${env.BUILD_NUMBER}<br/>
                 <b>Node:</b> ${env.NODE_NAME}<br/>
-                <pre>${CHANGES_SINCE_LAST_SUCCESS, format="JSON"}</pre>''',
+                <b>Result:</b> ${currentBuild.currentResult}<br/>
+                <b>URL:</b> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a><br/>''',
         to: "gautam.dev@unthinkable.co",
         mimeType: 'text/html'
       )
