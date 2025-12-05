@@ -71,11 +71,12 @@ EOF
         body: '''<p>Good news — build succeeded.</p>
                 <b>Job:</b> ${JOB_NAME}<br/>
                 <b>Build:</b> #${BUILD_NUMBER}<br/>
-                <b>Node:</b> ${ENV, var="NODE_NAME"}<br/>
+                <b>Node:</b> ${ENV,var="NODE_NAME"}<br/>
+                <b>Server URL:</b> ${JENKINS_URL}<br/>
                 <b>Result:</b> ${BUILD_STATUS}<br/>
                 <b>URL:</b> <a href="${BUILD_URL}">${BUILD_URL}</a><br/>
                 <pre>${CHANGES_SINCE_LAST_SUCCESS, format="JSON"}</pre>''',
-        to: "you@example.com",
+        to: "gautam.dev@unthinkable.co",
         mimeType: 'text/html'
       )
     }
