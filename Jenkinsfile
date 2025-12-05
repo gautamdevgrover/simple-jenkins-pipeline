@@ -71,7 +71,7 @@ EOF
         body: '''<p>Hi gautam Its Good news your Pipeline is — build successfully.</p>
                 <b>Job:</b> ${JOB_NAME}<br/>
                 <b>Build:</b> <a href="${BUILD_URL}">#${BUILD_NUMBER}</a><br/>
-                <b>Node:</b> ${NODE_NAME}<br/>
+                <b>Node:</b> ${env.NODE_NAME}<br/>
                 <pre>${CHANGES_SINCE_LAST_SUCCESS, format="JSON"}</pre>''',
         to: "gautam.dev@unthinkable.co",
         mimeType: 'text/html'
@@ -83,7 +83,7 @@ EOF
         body: """<p>Build failed — please check.</p>
                 <b>Job:</b> ${JOB_NAME}<br/>
                 <b>Build:</b> <a href="${BUILD_URL}">#${BUILD_NUMBER}</a><br/>
-                <b>Node:</b> ${NODE_NAME}<br/>
+                <b>Node:</b> ${env.NODE_NAME}<br/>
                 <p>Console output is attached.</p>""",
         to: "gautam.dev@unthinkable.co",
         mimeType: 'text/html',
