@@ -1,0 +1,17 @@
+{
+  "name": "junit-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --ci --reporters=default --reporters=jest-junit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "jest-junit": {
+    "outputDirectory": "reports",
+    "outputName": "junit.xml",
+    "suiteName": "junit-demo"
+  }
+}
