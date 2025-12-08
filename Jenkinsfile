@@ -44,7 +44,7 @@ pipeline {
         sshagent (credentials: ['ssh-agent-creds']) {
           sh '''
             IMAGE="${REGISTRY}/${IMAGE}:${BUILD_NUMBER}"
-            ssh -o StrictHostKeyChecking=no ubuntu@65.1.3.65 <<EOF
+            ssh -o StrictHostKeyChecking=no ubuntu@13.127.36.63 <<EOF
               set -ex
               docker pull "$IMAGE"
               docker stop simple-webserver-container || true
