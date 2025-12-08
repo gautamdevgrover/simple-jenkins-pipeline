@@ -7,14 +7,7 @@ pipeline {
   }
 
   stages {
-    stage('Checking out repo on master-node)') {
-      agent { label 'master-node' }    // optional — keeps a record, not needed for build
-      steps {
-        checkout scm
-        echo "Checked out on master-node."
-      }
-    }
-
+    
     stage('Checking out repo on worker-node') {
       agent { label 'worker-node' }
       steps {
