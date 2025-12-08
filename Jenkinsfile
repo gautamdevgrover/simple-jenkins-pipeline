@@ -81,7 +81,7 @@ EOF
                 <b>Node:</b> ${ENV,var="NODE_NAME"}<br/>
                 <b>Server URL:</b> ${JENKINS_URL}<br/>
                 <b>Result:</b> ${BUILD_STATUS}<br/>
-                <b>URL:</b> <a href="${BUILD_URL}">${BUILD_URL}</a><br/''',>
+                <b>URL:</b> <a href="${BUILD_URL}">${BUILD_URL}</a><br/>''',
           to: "gautam.dev@unthinkable.co",
         mimeType: 'text/html',
         attachLog: true,        // attach console log to help debugging
