@@ -77,11 +77,11 @@ EOF
       emailext (
         subject: "FAILURE: ${JOB_NAME} #${BUILD_NUMBER}",
         body: '''<p>Build failed — see attached log.</p>
-                <b>Job:</b> ${JOB_NAME}<br/>
                 <b>Build:</b> #${BUILD_NUMBER}<br/>
-                <b>Node:</b> ${ENV, var="NODE_NAME"}<br/>
+                <b>Node:</b> ${ENV,var="NODE_NAME"}<br/>
+                <b>Server URL:</b> ${JENKINS_URL}<br/>
                 <b>Result:</b> ${BUILD_STATUS}<br/>
-                <b>URL:</b> <a href="${BUILD_URL}">${BUILD_URL}</a><br/>''',
+                <b>URL:</b> <a href="${BUILD_URL}">${BUILD_URL}</a><br/>
           to: "gautam.dev@unthinkable.co",
         mimeType: 'text/html',
         attachLog: true,        // attach console log to help debugging
