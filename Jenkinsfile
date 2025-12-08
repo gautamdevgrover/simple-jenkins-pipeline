@@ -41,15 +41,13 @@ pipeline {
     stage('Deploy on EC2') {
       agent { label 'worker-node' }    // run deploy from master (or any node with ssh & key)
       steps {
-        sshagent (credentials: ['ssh-agent-creds']) {
-          sh '''
-            IMAGE="${REGISTRY}/${IMAGE}:${BUILD_NUMBER}"
-              docker pull "$IMAGE"
-              docker stop simple-webserver-container || true
-              docker rm simple-webserver-container || true
-              docker run -d -p 80:80 --name simple-webserver-container "$IMAGE"
+        sh '''
+          IMAGE="${REGISTRY}/${IMAGE}:${BUILD_NUMBER}"
+            docker pull "$IMAGE"
+            docker stop simple-webserver-container || true
+            docker rm simple-webserver-container || true
+            docker run -d -p 80:80 --name simple-webserver-container "$IMAGE"
           '''
-        }
       }
     }
   }
