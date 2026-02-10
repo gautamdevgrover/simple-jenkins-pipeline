@@ -64,7 +64,7 @@ pipeline {
                 <b>Result:</b> ${BUILD_STATUS}<br/>
                 <b>URL:</b> <a href="${BUILD_URL}">${BUILD_URL}</a><br/>
                 <pre>${CHANGES_SINCE_LAST_SUCCESS, format="JSON"}</pre>''',
-        to: "gautam.dev@unthinkable.co",
+        to: "gautamdev452@gmail.com",
         mimeType: 'text/html'
       )
     }
